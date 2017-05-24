@@ -1,0 +1,6 @@
+inherit_gem:
+  salsify_rubocop: conf/rubocop.yml
+
+Style/FileName:
+  Exclude:
+    - 'lib/avro-patches.rb'
