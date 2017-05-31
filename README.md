@@ -3,6 +3,9 @@
 This gem contains patches to the official [Apache Avro](https://avro.apache.org/)
 Ruby gem v1.8.2.
 
+We have attempted to follow the coding conventions used in the official `avro`
+repo.
+
 The following pending or unreleased changes are included:
 - [AVRO-1886: Add validation messages](https://github.com/apache/avro/pull/111)
 - [AVRO-1695: Ruby support for logical types revisited](https://github.com/apache/avro/pull/116)
