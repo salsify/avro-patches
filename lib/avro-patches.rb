@@ -1,5 +1,6 @@
 require 'avro-patches/version'
 
-# Top-level gem module
-module AvroPatches
-end
+require 'avro'
+require 'avro-patches/schema_validator'
+require 'avro-patches/logical_types'
+require 'avro-patches/schema_compatibility'

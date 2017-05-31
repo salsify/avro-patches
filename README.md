@@ -1,11 +1,22 @@
-# AvroPatches
+# avro-patches
 
-Welcome to your new gem! In this directory, you'll find the files you need to be
-able to package up your Ruby library into a gem. Put your Ruby code in the file
-`lib/avro-patches`. To experiment with that code, run 
-`bin/console` for an interactive prompt.
+This gem contains patches to the official [Apache Avro](https://avro.apache.org/)
+Ruby gem v1.8.2.
 
-TODO: Delete this and the text above, and describe your gem
+We have attempted to follow the coding conventions used in the official `avro`
+repo.
+
+The following pending or unreleased changes are included:
+- [AVRO-1886: Add validation messages](https://github.com/apache/avro/pull/111)
+- [AVRO-1695: Ruby support for logical types revisited](https://github.com/apache/avro/pull/116)
+- [AVRO-1969: Add schema compatibility checker for Ruby](https://github.com/apache/avro/pull/170)
+
+In addition, compatibility with Ruby 2.4 (https://github.com/apache/avro/pull/191)
+has been integrated with the changes above.
+
+The following Ruby changes are not included, but could be added in the future:
+- [AVRO-2001: Adding support for doc attribute](https://github.com/apache/avro/pull/197)
+- [AVRO-1873: Add CRC32 checksum to Snappy-compressed blocks](https://github.com/apache/avro/pull/121)
 
 ## Installation
 
@@ -23,14 +34,10 @@ Or install it yourself as:
 
     $ gem install avro-patches
 
-## Usage
-
-TODO: Write usage instructions here
-
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then,
-run `rake spec` to run the tests. You can also run `bin/console` for an
+run `rake test` to run the tests. You can also run `bin/console` for an
 interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. 
@@ -44,7 +51,9 @@ push git commits and tags, and push the `.gem` file to
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/salsify/avro-patches.## License
+https://github.com/salsify/avro-patches.
+
+## License
 
 The gem is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
