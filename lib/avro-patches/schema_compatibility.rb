@@ -1,0 +1,3 @@
+require_relative 'schema_compatibility/schema_compatibility'
+require_relative 'schema_compatibility/schema'
+require_relative 'schema_compatibility/io'
