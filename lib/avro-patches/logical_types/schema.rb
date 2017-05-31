@@ -103,7 +103,7 @@ end
 Avro::Schema::FixedSchema.class_eval do
   def initialize(name, space, size, names=nil, logical_type=nil)
     # Ensure valid cto args
-    unless size.is_a?(Fixnum) || size.is_a?(Bignum)
+    unless size.is_a?(Integer)
       raise Avro::AvroError, 'Fixed Schema requires a valid integer for size property.'
     end
     super(:fixed, name, space, names, logical_type)
