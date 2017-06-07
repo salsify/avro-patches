@@ -63,6 +63,7 @@ module Avro
     TypeMismatchError = Class.new(ValidationError)
 
     class << self
+      # These methods are replaced by code in AvroPatches::LogicalTypes::SchemaValidatorPatch.
       def validate!(expected_schema, datum)
         with_result do |result|
           validate_recursive(expected_schema, datum, ROOT_IDENTIFIER, result)
@@ -90,6 +91,9 @@ module Avro
         end
       end
 
+      # This method is replaced by code in AvroPatches::LogicalTypes::SchemaValidatorPatch.
+      # The patches are layered this way because SchemaValidator exists on
+      # avro's master branch but logical type support is still in PR.
       def validate_recursive(expected_schema, datum, path, result)
         validate_type(expected_schema)
         validate_simple(expected_schema, datum, path, result)
