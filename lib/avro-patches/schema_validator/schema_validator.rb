@@ -63,27 +63,19 @@ module Avro
     TypeMismatchError = Class.new(ValidationError)
 
     class << self
-      # These methods are replaced by code in AvroPatches::LogicalTypes::SchemaValidatorPatch.
-      def validate!(expected_schema, datum)
-        with_result do |result|
+      # This method is replaced by code in AvroPatches::LogicalTypes::SchemaValidatorPatch.
+      def validate!(expected_schema, datum, recursive = true)
+        result = Avro::SchemaValidator::Result.new
+        if recursive
           validate_recursive(expected_schema, datum, ROOT_IDENTIFIER, result)
-        end
-      end
-
-      def validate_simple!(expected_schema, datum)
-        with_result do |result|
+        else
           validate_simple(expected_schema, datum, ROOT_IDENTIFIER, result)
         end
-      end
-
-      private
-
-      def with_result
-        result = Avro::SchemaValidator::Result.new
-        yield result
         fail Avro::SchemaValidator::ValidationError, result if result.failure?
         result
       end
+
+      private
 
       def validate_type(expected_schema)
         unless Avro::Schema::VALID_TYPES_SYM.include?(expected_schema.type_sym)
@@ -95,7 +87,6 @@ module Avro
       # The patches are layered this way because SchemaValidator exists on
       # avro's master branch but logical type support is still in PR.
       def validate_recursive(expected_schema, datum, path, result)
-        validate_type(expected_schema)
         validate_simple(expected_schema, datum, path, result)
 
         case expected_schema.type_sym
@@ -116,7 +107,9 @@ module Avro
         result.add_error(path, "expected type #{expected_schema.type_sym}, got #{actual_value_message(datum)}")
       end
 
-      def validate_simple(expected_schema, datum, path, result = Result.new)
+      def validate_simple(expected_schema, datum, path, result)
+        validate_type(expected_schema)
+
         case expected_schema.type_sym
         when :null
           fail TypeMismatchError unless datum.nil?

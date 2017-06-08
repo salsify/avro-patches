@@ -1,24 +1,21 @@
 module AvroPatches
   module LogicalTypes
     module SchemaValidatorPatch
-      def validate!(expected_schema, logical_datum, encoded = false)
-        with_result do |result|
+      def validate!(expected_schema, logical_datum, recursive = true, encoded = false)
+        result = Avro::SchemaValidator::Result.new
+        if recursive
           validate_recursive(expected_schema, logical_datum, Avro::SchemaValidator::ROOT_IDENTIFIER, result, encoded)
-        end
-      end
-
-      def validate_simple!(expected_schema, logical_datum, encoded = false)
-        with_result do |result|
+        else
           validate_simple(expected_schema, logical_datum, Avro::SchemaValidator::ROOT_IDENTIFIER, result, encoded)
         end
+        fail Avro::SchemaValidator::ValidationError, result if result.failure?
+        result
       end
 
       private
 
       def validate_recursive(expected_schema, logical_datum, path, result, encoded = false)
         datum = resolve_datum(expected_schema, logical_datum, encoded)
-
-        validate_type(expected_schema)
 
         # The entire method is overridden so that encoded: true can be passed here
         validate_simple(expected_schema, datum, path, result, true)

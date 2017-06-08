@@ -2,7 +2,7 @@ Avro::IO::DatumWriter.class_eval do
   def write_data(writers_schema, logical_datum, encoder)
     datum = writers_schema.type_adapter.encode(logical_datum)
 
-    unless Avro::Schema.validate_simple(writers_schema, datum, true)
+    unless Avro::Schema.validate(writers_schema, datum, false, true)
       raise Avro::IO::AvroTypeError.new(writers_schema, datum)
     end
 
