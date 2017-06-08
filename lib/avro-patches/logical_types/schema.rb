@@ -57,8 +57,8 @@ Avro::Schema.class_eval do
   end
 
   # Determine if a ruby datum is an instance of a schema
-  def self.validate(expected_schema, logical_datum, encoded = false)
-    Avro::SchemaValidator.validate!(expected_schema, logical_datum, encoded)
+  def self.validate(expected_schema, logical_datum, options = { recursive: true, encoded: false })
+    Avro::SchemaValidator.validate!(expected_schema, logical_datum, options)
     true
   rescue Avro::SchemaValidator::ValidationError
     false

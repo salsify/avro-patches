@@ -63,16 +63,56 @@ module Avro
     TypeMismatchError = Class.new(ValidationError)
 
     class << self
-      def validate!(expected_schema, datum)
-        result = Result.new
-        validate_recursive(expected_schema, datum, ROOT_IDENTIFIER, result)
-        fail ValidationError, result if result.failure?
+      # This method is replaced by code in AvroPatches::LogicalTypes::SchemaValidatorPatch.
+      def validate!(expected_schema, datum, options = { recursive: true })
+        options ||= {}
+        options[:recursive] = true unless options.key?(:recursive)
+
+        result = Avro::SchemaValidator::Result.new
+        if options[:recursive]
+          validate_recursive(expected_schema, datum, ROOT_IDENTIFIER, result)
+        else
+          validate_simple(expected_schema, datum, ROOT_IDENTIFIER, result)
+        end
+        fail Avro::SchemaValidator::ValidationError, result if result.failure?
         result
       end
 
       private
 
+      def validate_type(expected_schema)
+        unless Avro::Schema::VALID_TYPES_SYM.include?(expected_schema.type_sym)
+          fail "Unexpected schema type #{expected_schema.type_sym} #{expected_schema.inspect}"
+        end
+      end
+
+      # This method is replaced by code in AvroPatches::LogicalTypes::SchemaValidatorPatch.
+      # The patches are layered this way because SchemaValidator exists on
+      # avro's master branch but logical type support is still in PR.
       def validate_recursive(expected_schema, datum, path, result)
+        validate_simple(expected_schema, datum, path, result)
+
+        case expected_schema.type_sym
+        when :array
+          validate_array(expected_schema, datum, path, result)
+        when :map
+          validate_map(expected_schema, datum, path, result)
+        when :union
+          validate_union(expected_schema, datum, path, result)
+        when :record, :error, :request
+          fail TypeMismatchError unless datum.is_a?(Hash)
+          expected_schema.fields.each do |field|
+            deeper_path = deeper_path_for_hash(field.name, path)
+            validate_recursive(field.type, datum[field.name], deeper_path, result)
+          end
+        end
+      rescue TypeMismatchError
+        result.add_error(path, "expected type #{expected_schema.type_sym}, got #{actual_value_message(datum)}")
+      end
+
+      def validate_simple(expected_schema, datum, path, result)
+        validate_type(expected_schema)
+
         case expected_schema.type_sym
         when :null
           fail TypeMismatchError unless datum.nil?
@@ -96,20 +136,6 @@ module Avro
           end
         when :enum
           result.add_error(path, enum_message(expected_schema.symbols, datum)) unless expected_schema.symbols.include?(datum)
-        when :array
-          validate_array(expected_schema, datum, path, result)
-        when :map
-          validate_map(expected_schema, datum, path, result)
-        when :union
-          validate_union(expected_schema, datum, path, result)
-        when :record, :error, :request
-          fail TypeMismatchError unless datum.is_a?(Hash)
-          expected_schema.fields.each do |field|
-            deeper_path = deeper_path_for_hash(field.name, path)
-            validate_recursive(field.type, datum[field.name], deeper_path, result)
-          end
-        else
-          fail "Unexpected schema type #{expected_schema.type_sym} #{expected_schema.inspect}"
         end
       rescue TypeMismatchError
         result.add_error(path, "expected type #{expected_schema.type_sym}, got #{actual_value_message(datum)}")
