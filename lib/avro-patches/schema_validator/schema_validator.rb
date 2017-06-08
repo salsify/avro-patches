@@ -64,9 +64,12 @@ module Avro
 
     class << self
       # This method is replaced by code in AvroPatches::LogicalTypes::SchemaValidatorPatch.
-      def validate!(expected_schema, datum, recursive = true)
+      def validate!(expected_schema, datum, options = { recursive: true })
+        options ||= {}
+        options[:recursive] = true unless options.key?(:recursive)
+
         result = Avro::SchemaValidator::Result.new
-        if recursive
+        if options[:recursive]
           validate_recursive(expected_schema, datum, ROOT_IDENTIFIER, result)
         else
           validate_simple(expected_schema, datum, ROOT_IDENTIFIER, result)

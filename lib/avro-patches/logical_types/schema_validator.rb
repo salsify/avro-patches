@@ -1,12 +1,15 @@
 module AvroPatches
   module LogicalTypes
     module SchemaValidatorPatch
-      def validate!(expected_schema, logical_datum, recursive = true, encoded = false)
+      def validate!(expected_schema, logical_datum, options = { recursive: true, encoded: false })
+        options ||= {}
+        options[:recursive] = true unless options.key?(:recursive)
+
         result = Avro::SchemaValidator::Result.new
-        if recursive
-          validate_recursive(expected_schema, logical_datum, Avro::SchemaValidator::ROOT_IDENTIFIER, result, encoded)
+        if options[:recursive]
+          validate_recursive(expected_schema, logical_datum, Avro::SchemaValidator::ROOT_IDENTIFIER, result, options[:encoded])
         else
-          validate_simple(expected_schema, logical_datum, Avro::SchemaValidator::ROOT_IDENTIFIER, result, encoded)
+          validate_simple(expected_schema, logical_datum, Avro::SchemaValidator::ROOT_IDENTIFIER, result, options[:encoded])
         end
         fail Avro::SchemaValidator::ValidationError, result if result.failure?
         result

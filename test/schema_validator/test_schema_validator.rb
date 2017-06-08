@@ -22,7 +22,7 @@ class TestSchema < Test::Unit::TestCase
   end
 
   def validate_simple!(schema, value)
-    Avro::SchemaValidator.validate!(schema, value, false)
+    Avro::SchemaValidator.validate!(schema, value, { recursive: false })
   end
 
   def hash_to_schema(hash)
@@ -43,13 +43,13 @@ class TestSchema < Test::Unit::TestCase
   def assert_valid_schema(schema, valid, invalid, simple = false)
     valid.each do |value|
       assert_nothing_raised { Avro::SchemaValidator.validate!(schema, value) }
-      assert_nothing_raised { Avro::SchemaValidator.validate!(schema, value, false) } if simple
+      assert_nothing_raised { Avro::SchemaValidator.validate!(schema, value, { recursive: false }) } if simple
     end
 
     invalid.each do |value|
       assert_raise { Avro::SchemaValidator.validate!(schema, value) }
       assert_raise { Avro::SchemaValidator.validate!(schema, value, false) } if simple
-      assert_nothing_raised { Avro::SchemaValidator.validate!(schema, value, false) } unless simple
+      assert_nothing_raised { Avro::SchemaValidator.validate!(schema, value, { recursive: false }) } unless simple
     end
   end
 
