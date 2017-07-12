@@ -1,5 +1,8 @@
 # avro-patches
 
+## v0.3.1
+- Fix references to `Avro::SchemaParseError`.
+
 ## v0.3.0
 - Further performance improvements for `Avro::SchemaValidator` and encoding.
 - Ensure that strings are encoded as UTF-8.

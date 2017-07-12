@@ -6,12 +6,12 @@ Avro::Schema.class_eval do
     if json_obj.is_a? Hash
       type = json_obj['type']
       logical_type = json_obj['logicalType']
-      raise Avro::Schema::SchemaParseError, %Q(No "type" property: #{json_obj}) if type.nil?
+      raise Avro::SchemaParseError, %Q(No "type" property: #{json_obj}) if type.nil?
 
       # Check that the type is valid before calling #to_sym, since symbols are never garbage
       # collected (important to avoid DoS if we're accepting schemas from untrusted clients)
       unless Avro::Schema::VALID_TYPES.include?(type)
-        raise Avro::Schema::SchemaParseError, "Unknown type: #{type}"
+        raise Avro::SchemaParseError, "Unknown type: #{type}"
       end
 
       type_sym = type.to_sym
@@ -32,7 +32,7 @@ Avro::Schema.class_eval do
           fields = json_obj['fields']
           return Avro::Schema::RecordSchema.new(name, namespace, fields, names, type_sym)
         else
-          raise Avro::Schema::SchemaParseError.new("Unknown named type: #{type}")
+          raise Avro::SchemaParseError.new("Unknown named type: #{type}")
         end
 
       else
@@ -42,7 +42,7 @@ Avro::Schema.class_eval do
         when :map
           return Avro::Schema::MapSchema.new(json_obj['values'], names, default_namespace)
         else
-          raise Avro::Schema::SchemaParseError.new("Unknown Valid Type: #{type}")
+          raise Avro::SchemaParseError.new("Unknown Valid Type: #{type}")
         end
       end
 
