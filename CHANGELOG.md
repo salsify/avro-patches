@@ -1,7 +1,7 @@
 # avro-patches
 
 ## v0.3.1
-- Fix references to `Avro::SchemaParseError`.
+- Fix references to `Avro::SchemaParseError` and `Avro::UnknownSchemaError`.
 
 ## v0.3.0
 - Further performance improvements for `Avro::SchemaValidator` and encoding.
