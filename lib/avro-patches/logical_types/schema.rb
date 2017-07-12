@@ -31,8 +31,6 @@ Avro::Schema.class_eval do
         when :record, :error
           fields = json_obj['fields']
           return Avro::Schema::RecordSchema.new(name, namespace, fields, names, type_sym)
-        else
-          raise Avro::SchemaParseError.new("Unknown named type: #{type}")
         end
 
       else
@@ -52,7 +50,7 @@ Avro::Schema.class_eval do
     elsif Avro::Schema::PRIMITIVE_TYPES.include? json_obj
       return Avro::Schema::PrimitiveSchema.new(json_obj)
     else
-      raise Avro::Schema::UnknownSchemaError.new(json_obj)
+      raise Avro::UnknownSchemaError.new(json_obj)
     end
   end
 
