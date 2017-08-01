@@ -1,5 +1,8 @@
 # avro-patches
 
+## v0.3.2
+- Fix remaining Ruby 2.4 deprecation notices by replacing `require 'avro'`.
+
 ## v0.3.1
 - Fix references to `Avro::SchemaParseError` and `Avro::UnknownSchemaError`.
 
