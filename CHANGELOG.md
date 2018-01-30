@@ -1,5 +1,9 @@
 # avro-patches
 
+## v0.3.3
+- Restore basic validation of records, arrays, and maps before writing.
+- Add validation to protect against nil value for map.
+
 ## v0.3.2
 - Fix remaining Ruby 2.4 deprecation notices by replacing `require 'avro'`.
 

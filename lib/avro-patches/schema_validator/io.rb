@@ -25,3 +25,26 @@ Avro::IO::DatumWriter.class_eval do
     end
   end
 end
+
+module AvroPatches
+  module SchemaValidator
+    module IOPatches
+      def write_record(writers_schema, datum, encoder)
+        raise Avro::IO::AvroTypeError.new(writers_schema, datum) unless datum.is_a?(Hash)
+        super
+      end
+
+      def write_array(writers_schema, datum, encoder)
+        raise Avro::IO::AvroTypeError.new(writers_schema, datum) unless datum.is_a?(Array)
+        super
+      end
+
+      def write_map(writers_schema, datum, encoder)
+        raise Avro::IO::AvroTypeError.new(writers_schema, datum) unless datum.is_a?(Hash)
+        super
+      end
+    end
+  end
+end
+
+Avro::IO::DatumWriter.prepend(AvroPatches::SchemaValidator::IOPatches)
