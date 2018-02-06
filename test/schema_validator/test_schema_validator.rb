@@ -356,7 +356,7 @@ class TestSchema < Test::Unit::TestCase
     assert_failed_validation("at . unexpected key type 'Symbol' in map") do
       validate!(schema, some: 1)
     end
-    assert_nothing_raised { validate_simple!(schema, nil) }
+    assert_nothing_raised { validate_simple!(schema, some: 1) }
 
     assert_failed_validation('at . expected type map, got null') do
       validate!(schema, nil)
