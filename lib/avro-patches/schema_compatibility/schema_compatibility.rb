@@ -1,4 +1,6 @@
 module Avro
+
+  # see http://avro.apache.org/docs/current/spec.html#Schema+Resolution for what this should do
   module SchemaCompatibility
     def self.can_read?(writers_schema, readers_schema)
       Checker.new.can_read?(writers_schema, readers_schema)
@@ -106,6 +108,7 @@ module Avro
         end
       end
 
+      # reader is a union
       def match_union_schemas(writers_schema, readers_schema)
         raise 'readers_schema must be a union' unless readers_schema.type_sym == :union
 
@@ -117,17 +120,25 @@ module Avro
         end
       end
 
+      # reader is a record
       def match_record_schemas(writers_schema, readers_schema)
-        writer_fields_hash = writers_schema.fields_hash
-        readers_schema.fields.each do |field|
-          if writer_fields_hash.key?(field.name)
-            return false unless full_match_schemas(writer_fields_hash[field.name].type, field.type)
-          else
-            return false unless field.default?
+        case writers_schema.type_sym
+        when :union
+          # find the first schema in the writer's union that matches the reader record's name
+          matching_union_member = writers_schema.schemas.select { |schema| schema.type_sym == :record && schema.name == readers_schema.name }.first
+          return false unless !matching_union_member.nil? && full_match_schemas(matching_union_member, readers_schema)
+        else
+          writer_fields_hash = writers_schema.fields_hash
+          readers_schema.fields.each do |field|
+            if writer_fields_hash.key?(field.name)
+              return false unless full_match_schemas(writer_fields_hash[field.name].type, field.type)
+            else
+              return false unless field.default?
+            end
           end
-        end
 
-        return true
+          return true
+        end
       end
 
       def recursion_in_progress?(writers_schema, readers_schema)
