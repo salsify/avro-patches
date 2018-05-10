@@ -124,9 +124,7 @@ module Avro
       def match_record_schemas(writers_schema, readers_schema)
         case writers_schema.type_sym
         when :union
-          # find the first schema in the writer's union that matches the reader record's name
-          matching_union_member = writers_schema.schemas.select { |schema| schema.type_sym == :record && schema.name == readers_schema.name }.first
-          return false unless !matching_union_member.nil? && full_match_schemas(matching_union_member, readers_schema)
+          return false
         else
           writer_fields_hash = writers_schema.fields_hash
           readers_schema.fields.each do |field|
