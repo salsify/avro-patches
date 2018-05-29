@@ -1,4 +1,6 @@
 module Avro
+
+  # see http://avro.apache.org/docs/current/spec.html#Schema+Resolution for what this should do
   module SchemaCompatibility
     def self.can_read?(writers_schema, readers_schema)
       Checker.new.can_read?(writers_schema, readers_schema)
@@ -106,6 +108,7 @@ module Avro
         end
       end
 
+      # reader is a union
       def match_union_schemas(writers_schema, readers_schema)
         raise 'readers_schema must be a union' unless readers_schema.type_sym == :union
 
@@ -117,17 +120,23 @@ module Avro
         end
       end
 
+      # reader is a record
       def match_record_schemas(writers_schema, readers_schema)
-        writer_fields_hash = writers_schema.fields_hash
-        readers_schema.fields.each do |field|
-          if writer_fields_hash.key?(field.name)
-            return false unless full_match_schemas(writer_fields_hash[field.name].type, field.type)
-          else
-            return false unless field.default?
+        case writers_schema.type_sym
+        when :union
+          return false
+        else
+          writer_fields_hash = writers_schema.fields_hash
+          readers_schema.fields.each do |field|
+            if writer_fields_hash.key?(field.name)
+              return false unless full_match_schemas(writer_fields_hash[field.name].type, field.type)
+            else
+              return false unless field.default?
+            end
           end
-        end
 
-        return true
+          return true
+        end
       end
 
       def recursion_in_progress?(writers_schema, readers_schema)

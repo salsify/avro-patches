@@ -3,6 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 set -v
 
+gem install bundler
 bundle update
 
 overcommit --install

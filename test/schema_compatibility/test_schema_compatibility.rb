@@ -59,7 +59,10 @@ class TestSchemaCompatibility < Test::Unit::TestCase
       long_list_record_schema, long_list_record_schema,
       long_list_record_schema, int_list_record_schema,
 
-      null_schema, null_schema
+      null_schema, null_schema,
+
+      nested_optional_record, nested_record  # (null, foo) is the superset of (foo)
+
     ].each_slice(2) do |(reader, writer)|
       assert_true(can_read?(writer, reader), "expecting #{reader} to read #{writer}")
     end
@@ -71,6 +74,7 @@ class TestSchemaCompatibility < Test::Unit::TestCase
 
   def test_incompatible_reader_writer_pairs
     [
+
       null_schema, int_schema,
       null_schema, long_schema,
 
@@ -114,7 +118,10 @@ class TestSchemaCompatibility < Test::Unit::TestCase
 
       int_list_record_schema, long_list_record_schema,
 
-      null_schema, int_schema
+      null_schema, int_schema,
+
+      nested_record, nested_optional_record, # can't null the unnullable
+
     ].each_slice(2) do |(reader, writer)|
       assert_false(can_read?(writer, reader), "expecting #{reader} not to read #{writer}")
     end
@@ -395,6 +402,14 @@ class TestSchemaCompatibility < Test::Unit::TestCase
 
   def a_dint_b_dint_record1_schema
     Avro::Schema.parse('{"type":"record", "name":"Record1", "fields":[{"name":"a", "type":"int", "default":0}, {"name":"b", "type":"int", "default":0}]}')
+  end
+
+  def nested_record
+    Avro::Schema.parse('{"type":"record","name":"parent","fields":[{"name":"attribute","type":{"type":"record","name":"child","fields":[{"name":"id","type":"string"}]}}]}')
+  end
+
+  def nested_optional_record
+    Avro::Schema.parse('{"type":"record","name":"parent","fields":[{"name":"attribute","type":["null",{"type":"record","name":"child","fields":[{"name":"id","type":"string"}]}],"default":null}]}')
   end
 
   def int_list_record_schema
