@@ -1,5 +1,8 @@
 # avro-patches
 
+## v0.3.4
+- Allow promotion of nested records to optional 
+
 ## v0.3.3
 - Restore basic validation of records, arrays, and maps before writing.
 - Add validation to protect against nil value for map.
