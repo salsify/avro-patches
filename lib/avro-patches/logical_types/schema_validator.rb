@@ -36,6 +36,12 @@ module AvroPatches
             deeper_path = deeper_path_for_hash(field.name, path)
             validate_recursive(field.type, datum[field.name], deeper_path, result)
           end
+          datum.each_key do |field_name|
+            if expected_schema.fields.find { |f| f.name == field_name.to_s }.nil?
+              result.add_error(path,
+                               "extra field provided: #{field_name} - not in schema!")
+            end
+          end
         end
       rescue Avro::SchemaValidator::TypeMismatchError
         result.add_error(path, "expected type #{expected_schema.type_sym}, got #{actual_value_message(datum)}")
