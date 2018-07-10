@@ -108,3 +108,18 @@ Avro::Schema::FixedSchema.class_eval do
     @size = size
   end
 end
+
+Avro::Schema::Field.class_eval do
+  def initialize(type, name, default=:no_default, order=nil, names=nil, namespace=nil)
+    @type = subparse(type, names, namespace)
+    @name = name
+    @default = default
+    @order = order
+    begin
+      Avro::SchemaValidator.validate!(@type, @default) if default?
+    rescue Avro::SchemaValidator::ValidationError => e
+      raise Avro::SchemaParseError, "Error validating default for #{name}: #{e.message}"
+    end
+  end
+
+end

@@ -469,4 +469,41 @@ class TestSchema < Test::Unit::TestCase
       exception.to_s
     )
   end
+
+  def test_validate_defaults
+    exception = assert_raise(Avro::SchemaParseError) do
+      hash_to_schema(
+                 type: 'record',
+                 name: 'fruits',
+                 fields: [
+                   {
+                     name: 'veggies',
+                     type: 'string',
+                     default: nil
+                   }
+                       ]
+      )
+    end
+    assert_equal("Error validating default for veggies: at . expected type string, got null",
+                 exception.to_s)
+  end
+
+  def test_validate_union_defaults
+    exception = assert_raise(Avro::SchemaParseError) do
+      hash_to_schema(
+               type: 'record',
+               name: 'fruits',
+               fields: [
+                 {
+                   name: 'veggies',
+                   type: %w(string null),
+                   default: 5
+                 }
+                     ]
+      )
+    end
+    assert_equal("Error validating default for veggies: at . expected union of ['string', 'null'], got int with value 5",
+                 exception.to_s)
+  end
+
 end
