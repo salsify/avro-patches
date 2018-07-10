@@ -17,8 +17,8 @@
 require 'test_help'
 
 class TestSchema < Test::Unit::TestCase
-  def validate!(schema, value)
-    Avro::SchemaValidator.validate!(schema, value)
+  def validate!(schema, value, options=nil)
+    Avro::SchemaValidator.validate!(schema, value, options)
   end
 
   def validate_simple!(schema, value)
@@ -310,10 +310,7 @@ class TestSchema < Test::Unit::TestCase
       ]
     )
 
-    assert_failed_validation([
-                               'at .person expected type record, got null',
-                               'at . extra field provided: not at all - not in schema!'
-                             ]) {
+    assert_failed_validation('at .person expected type record, got null') {
       validate!(schema, 'not at all' => nil)
     }
     assert_nothing_raised { validate_simple!(schema, 'not at all' => nil) }
@@ -485,7 +482,7 @@ class TestSchema < Test::Unit::TestCase
                      ]
     )
     exception = assert_raise(Avro::SchemaValidator::ValidationError) do
-      validate!(schema, {'veggies' => 'tomato', 'bread' => 'rye'})
+      validate!(schema, {'veggies' => 'tomato', 'bread' => 'rye'}, fail_on_extra_fields: true)
     end
     assert_equal(1, exception.result.errors.size)
     assert_equal("at . extra field provided: bread - not in schema!",
