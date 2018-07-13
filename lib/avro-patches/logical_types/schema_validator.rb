@@ -39,11 +39,10 @@ module AvroPatches
             validate_recursive(field.type, datum[field.name], deeper_path, result)
           end
           if options[:fail_on_extra_fields]
-            datum.each_key do |field_name|
-              if expected_schema.fields.find { |f| f.name == field_name.to_s }.nil?
-                result.add_error(path,
-                                 "extra field provided: #{field_name} - not in schema!")
-              end
+            datum_fields = datum.keys.map(&:to_s)
+            schema_fields = expected_schema.fields.map(&:name)
+            (datum_fields - schema_fields).each do |extra_field|
+              result.add_error(path, "extra field '#{extra_field}' - not in schema")
             end
           end
         end

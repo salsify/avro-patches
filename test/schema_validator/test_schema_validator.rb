@@ -485,7 +485,7 @@ class TestSchema < Test::Unit::TestCase
       validate!(schema, {'veggies' => 'tomato', 'bread' => 'rye'}, fail_on_extra_fields: true)
     end
     assert_equal(1, exception.result.errors.size)
-    assert_equal("at . extra field provided: bread - not in schema!",
+    assert_equal("at . extra field 'bread' - not in schema",
                  exception.to_s)
   end
 
