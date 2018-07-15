@@ -19,7 +19,7 @@ module AvroPatches
 
       private
 
-      def validate_recursive(expected_schema, logical_datum, path, result, options={})
+      def validate_recursive(expected_schema, logical_datum, path, result, options = {})
         datum = resolve_datum(expected_schema, logical_datum, options[:encoded])
 
         # The entire method is overridden so that encoded: true can be passed here

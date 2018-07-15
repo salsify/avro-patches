@@ -1,5 +1,8 @@
 # avro-patches
 
+## v0.4.0 (unreleased)
+- Optionally fail validation when extra fields are present.
+
 ## v0.3.4
 - Allow promotion of nested records to optional 
 

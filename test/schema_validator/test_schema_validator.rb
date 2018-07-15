@@ -17,7 +17,7 @@
 require 'test_help'
 
 class TestSchema < Test::Unit::TestCase
-  def validate!(schema, value, options=nil)
+  def validate!(schema, value, options = nil)
     Avro::SchemaValidator.validate!(schema, value, options)
   end
 
@@ -479,7 +479,7 @@ class TestSchema < Test::Unit::TestCase
                    name: 'veggies',
                    type: 'string'
                  }
-                     ]
+               ]
     )
     exception = assert_raise(Avro::SchemaValidator::ValidationError) do
       validate!(schema, {'veggies' => 'tomato', 'bread' => 'rye'}, fail_on_extra_fields: true)
@@ -488,5 +488,4 @@ class TestSchema < Test::Unit::TestCase
     assert_equal("at . extra field 'bread' - not in schema",
                  exception.to_s)
   end
-
 end
