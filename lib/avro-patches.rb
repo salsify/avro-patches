@@ -33,6 +33,7 @@ require 'avro-patches/ensure_encoding'
 require 'avro-patches/schema_validator'
 require 'avro-patches/logical_types'
 require 'avro-patches/schema_compatibility'
+require 'avro-patches/default_validation'
 
 # Remaining requires from the official avro gem
 require 'avro/data_file'
