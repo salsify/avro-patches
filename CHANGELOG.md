@@ -3,6 +3,7 @@
 ## v0.4.0 (unreleased)
 - Optionally fail validation when extra fields are present.
 - Check that field defaults have the correct type.
+- Support values for logical types that were already encoded.
 
 ## v0.3.4
 - Allow promotion of nested records to optional 
