@@ -1,9 +1,10 @@
 # avro-patches
 
-## v0.4.0 (unreleased)
+## v0.4.0
 - Optionally fail validation when extra fields are present.
 - Check that field defaults have the correct type.
 - Support values for logical types that were already encoded.
+- Remove bin directory scripts from the release.
 
 ## v0.3.4
 - Allow promotion of nested records to optional 
