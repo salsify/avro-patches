@@ -12,6 +12,7 @@ The following pending or unreleased changes are included:
 - [AVRO-1969: Add schema compatibility checker for Ruby](https://github.com/apache/avro/pull/170)
 - [AVRO-2039: Ruby encoding performance improvements](https://github.com/apache/avro/pull/230)
 - [AVRO-2200: Option to fail when extra fields are in the payload](https://github.com/apache/avro/pull/321)
+- [AVRO-2199: Validate that field defaults have the correct type](https://github.com/apache/avro/pull/320)
 
 In addition, compatibility with Ruby 2.4 (https://github.com/apache/avro/pull/191)
 has been integrated with the changes above.
