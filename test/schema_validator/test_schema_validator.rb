@@ -488,4 +488,35 @@ class TestSchema < Test::Unit::TestCase
     assert_equal("at . extra field 'bread' - not in schema",
                  exception.to_s)
   end
+
+  def test_validate_deep_extra_fields
+    schema = hash_to_schema(type: 'record',
+                            name: 'fruits',
+                            fields: [
+                              {
+                                name: 'fruits',
+                                type: {
+                                  name: 'fruits',
+                                  type: 'array',
+                                  items: [
+                                    {
+                                      name: 'fruit',
+                                      type: 'record',
+                                      fields: [
+                                        { name: 'name', type: 'string' },
+                                        { name: 'weight', type: 'float' }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }
+                            ])
+    exception = assert_raise(Avro::SchemaValidator::ValidationError) do
+      validate!(schema, {'fruits' => [{ 'name' => 'apple', 'weight' => 30.2, 'extra' => true }]}, fail_on_extra_fields: true)
+    end
+    assert_equal(1, exception.result.errors.size)
+    assert_equal("at .fruits[0] extra field 'extra' - not in schema",
+                 exception.to_s)
+  end
+
 end

@@ -27,11 +27,11 @@ module AvroPatches
 
         case expected_schema.type_sym
         when :array
-          validate_array(expected_schema, datum, path, result)
+          validate_array(expected_schema, datum, path, result, options)
         when :map
-          validate_map(expected_schema, datum, path, result)
+          validate_map(expected_schema, datum, path, result, options)
         when :union
-          validate_union(expected_schema, datum, path, result)
+          validate_union(expected_schema, datum, path, result, options)
         when :record, :error, :request
           fail Avro::SchemaValidator::TypeMismatchError unless datum.is_a?(Hash)
           expected_schema.fields.each do |field|
@@ -62,6 +62,43 @@ module AvroPatches
           expected_schema.type_adapter.encode(logical_datum) rescue nil
         end
       end
+
+      def validate_array(expected_schema, datum, path, result, options = {})
+        fail Avro::SchemaValidator::TypeMismatchError unless datum.is_a?(Array)
+        datum.each_with_index do |d, i|
+          validate_recursive(expected_schema.items, d, path + "[#{i}]", result, options)
+        end
+      end
+
+      def validate_map(expected_schema, datum, path, result, options = {})
+        fail Avro::SchemaValidator::TypeMismatchError unless datum.is_a?(Hash)
+        datum.keys.each do |k|
+          result.add_error(path, "unexpected key type '#{ruby_to_avro_type(k.class)}' in map") unless k.is_a?(String)
+        end
+        datum.each do |k, v|
+          deeper_path = deeper_path_for_hash(k, path)
+          validate_recursive(expected_schema.values, v, deeper_path, result, options)
+        end
+      end
+
+      def validate_union(expected_schema, datum, path, result, options = {})
+        if expected_schema.schemas.size == 1
+          validate_recursive(expected_schema.schemas.first, datum, path, result, options)
+          return
+        end
+        failures = []
+        compatible_type = first_compatible_type(datum, expected_schema, path, failures)
+        return unless compatible_type.nil?
+
+        complex_type_failed = failures.detect { |r| Avro::SchemaValidator::COMPLEX_TYPES.include?(r[:type]) }
+        if complex_type_failed
+          complex_type_failed[:result].errors.each { |error| result << error }
+        else
+          types = expected_schema.schemas.map { |s| "'#{s.type_sym}'" }.join(', ')
+          result.add_error(path, "expected union of [#{types}], got #{actual_value_message(datum)}")
+        end
+      end
+
     end
   end
 end
