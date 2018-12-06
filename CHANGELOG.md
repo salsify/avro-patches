@@ -1,5 +1,8 @@
 # avro-patches
 
+## v0.4.1
+- Optimize binary encoder and decoder.
+
 ## v0.4.0
 - Optionally fail validation when extra fields are present.
 - Check that field defaults have the correct type.
