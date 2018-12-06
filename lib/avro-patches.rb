@@ -34,6 +34,7 @@ require 'avro-patches/schema_validator'
 require 'avro-patches/logical_types'
 require 'avro-patches/schema_compatibility'
 require 'avro-patches/default_validation'
+require 'avro-patches/optimized_serde'
 
 # Remaining requires from the official avro gem
 require 'avro/data_file'
