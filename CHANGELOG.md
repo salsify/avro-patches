@@ -1,5 +1,9 @@
 # avro-patches
 
+## v1.0.0
+- Release for Avro v1.9.0. This removes all patches as all changes
+  from the previous release are included in Avro v1.9.0.
+
 ## v0.4.0
 - Optionally fail validation when extra fields are present.
 - Check that field defaults have the correct type.

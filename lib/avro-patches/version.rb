@@ -1,3 +1,3 @@
 module AvroPatches
-  VERSION = '0.4.0'.freeze
+  VERSION = '1.0.0.pre0'.freeze
 end
