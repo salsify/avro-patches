@@ -1,26 +1,18 @@
 # avro-patches
 
-This gem contains patches to the official [Apache Avro](https://avro.apache.org/)
-Ruby gem v1.8.2.
+## Avro v1.9.0
 
-We have attempted to follow the coding conventions used in the official `avro`
-repo.
+After the official release of [Apache Avro](https://avro.apache.org/) v1.9.0 this
+gem non longer contains any patches. This version is being released as a compatibility
+layer for Avro v1.9.0.
 
-The following pending or unreleased changes are included:
-- [AVRO-1886: Add validation messages](https://github.com/apache/avro/pull/111)
-- [AVRO-1695: Ruby support for logical types revisited](https://github.com/apache/avro/pull/116)
-- [AVRO-1969: Add schema compatibility checker for Ruby](https://github.com/apache/avro/pull/170)
-- [AVRO-2039: Ruby encoding performance improvements](https://github.com/apache/avro/pull/230)
-- [AVRO-2200: Option to fail when extra fields are in the payload](https://github.com/apache/avro/pull/321)
-- [AVRO-2199: Validate that field defaults have the correct type](https://github.com/apache/avro/pull/320)
-- [AVRO-2281: Optimize ruby binary encoder/decoder](https://github.com/apache/avro/pull/401)
+As Ruby changes are submitted for the next Avro release, it is expected that they
+be collected in future releases of this gem.
 
-In addition, compatibility with Ruby 2.4 (https://github.com/apache/avro/pull/191)
-has been integrated with the changes above.
+## Avro v1.8.2
 
-The following Ruby changes are not included, but could be added in the future:
-- [AVRO-2001: Adding support for doc attribute](https://github.com/apache/avro/pull/197)
-- [AVRO-1873: Add CRC32 checksum to Snappy-compressed blocks](https://github.com/apache/avro/pull/121)
+See the [avro-v1.8.2 branch](https://github.com/salsify/avro-patches/tree/avro-1.8.2)
+for details about the previous version of this gem which supported Avro v1.8.2. 
 
 ## Installation
 
