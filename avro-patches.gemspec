@@ -31,5 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'test-unit'
   spec.add_development_dependency 'overcommit'
 
-  spec.add_runtime_dependency 'avro', '1.9.0'
+  spec.add_runtime_dependency 'avro', '>= 1.9.0', '<= 1.9.1'
 end
