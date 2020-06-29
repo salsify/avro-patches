@@ -1,6 +1,11 @@
 # avro-patches
 
-## Avro v1.9.0
+## Avro v1.10.0
+
+This gem is compatible with Avro v1.10.0 and does not contain any patches for
+that version.
+
+## Avro v1.9.x
 
 After the official release of [Apache Avro](https://avro.apache.org/) v1.9.0 this
 gem non longer contains any patches. This version is being released as a compatibility

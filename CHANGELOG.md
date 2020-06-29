@@ -1,5 +1,8 @@
 # avro-patches
 
+## v1.0.2
+- Compatibility with Avro v1.10. No other changes.
+
 ## v1.0.1
 - Compatibility with Avro v1.9.1. No other changes.
 
